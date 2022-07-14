@@ -5,7 +5,7 @@ Repository to manage personal workstations using
 ## Ansible Setup
 1. Download and run `setup-ansible.sh` script from repository:
 ```Bash
-wget --no-check-cretificate --content-disposition https://raw.githubusercontent.com/P-Miranda/ansible-workstation/main/setup-ansible.sh
+wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/P-Miranda/ansible-workstation/main/setup-ansible.sh
 chmod +x ansible-setup.sh
-sudo ./ansible-setup.sh
+./ansible-setup.sh
 ```

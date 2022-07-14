@@ -5,47 +5,45 @@
 # Install git and clone repository
 #
 
-# Check for sudo permissions
-if ! [ $(id -u) = 0 ];
-then
-    echo "The script needs to run as root to allow program installation."
-    echo "Usage: sudo ./ansible-setup.sh"
-    exit 1
-fi
-
 # Check for pip
-if ! command -v python3 -m pip --version &> /dev/null
+python3 -m pip --version &> /dev/null
+if [ $? -ne 0 ];
 then
     sudo apt update
-    sudo apt install python3-pip
+    sudo apt install -y python3-pip python3-venv
     python3 -m pip install --upgrade pip
 fi
 
 # Check for pipx
-if ! command -v pipx --version &> /dev/null
+PIPX="$HOME/.local/bin/pipx"
+$PIPX --version &> /dev/null
+if [ $? -ne 0 ];
 then
     python3 -m pip install --user pipx
     python3 -m pipx ensurepath
+    source ~/.bashrc
     python3 -m pip install --user -U pipx
 fi
 
 # Check for ansible
-if ! command -v ansible --version &> /dev/null
+ansible --version &> /dev/null
+if [ $? -ne 0 ];
 then
-    pipx install ansible
+    $PIPX install --include-deps ansible
 fi
 
 # Check for git
-if ! command -v git --version &> /dev/null
+git --version &> /dev/null
+if [ $? -ne 0 ];
 then
     sudo apt update
-    sudo apt install git
+    sudo apt install -y git
 fi
 
 # Clone repository
 ANSIBLE_REPO="P-Miranda/ansible-workstation"
-git clone https://github.com/$ANSIBLE_REPO.git
-cd basename $ANSIBLE_REPO
+$USER_CMD git clone https://github.com/$ANSIBLE_REPO.git
+cd $(basename $ANSIBLE_REPO)
 
 echo "Ansible Workstation Setup Complete"
 echo "System ready to execute Ansible plays"
