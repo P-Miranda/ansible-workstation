@@ -26,3 +26,30 @@ ansible-playbook main.yml -K
 ```
 - `main.yml` playbook to run
 - `-K` ask for become sudo password
+
+## TODO
+- Add bash_local template
+- Setup ssh?
+    - how to manage ssh keys?
+    - setup .ssh/config
+- Install programs:
+    - keepassxc
+    - firefox
+    - chrome
+    - brave
+    - discord
+    - spotify
+- Python setup:
+    - pyenv
+    - pipx
+    - flake8
+    - black
+    - mypy
+    - tox
+- C/C++ setup
+    - install clang and other tools
+- Hardware setup
+    - riscv toolchain
+    - icarus
+    - verilator
+- NAS Setup
