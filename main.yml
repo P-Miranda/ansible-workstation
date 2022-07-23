@@ -2,14 +2,21 @@
 - name: "Main Ansible playbook"
   hosts: localhost
   connection: local
-  tasks:
+  
+  vars:
+    dotfiles_dst: "{{ lookup('env', 'HOME') }}/.dotfiles"
+    dotfiles_repo: "git@github.com:P-Miranda/dotfiles.git"
+    dotgit_cmd: "/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+    dotgit_cmd2: "/usr/bin/git --git-dir={{ lookup('env', 'HOME') }}/.dotfiles/ --work-tree={{ lookup('env', 'HOME') }}"
 
+  pre_tasks:
   - name: "Update Cache"
     become: yes
     apt:
       update_cache: yes
       cache_valid_time: 3600
-  
+
+  tasks:
   - name: "Update all packages"
     become: yes
     apt:
@@ -32,6 +39,7 @@
       pkg:
       - git
       - tmux
+      - vim
       - lxappearance
       - build-essential
       - arandr
@@ -40,3 +48,37 @@
       - texlive
       - thunderbird
       state: latest
+
+  - name: "Set dotgit Command Alias"
+    lineinfile:
+      path: "{{ lookup('env', 'HOME') }}/.bashrc"
+      regexp: '^alias dotgit='
+      line: alias dotgit='{{ dotgit_cmd }}'
+      state: present
+
+  # NOTE: assumes existing ssh key added to github account
+  - name: "Clone Dotfiles"
+    git:
+      bare: yes
+      dest: "{{ dotfiles_dst }}"
+      repo: "{{ dotfiles_repo }}"
+      update: yes
+
+  - name: "Ignore .dotfiles folder"
+    lineinfile:
+      path: "{{ lookup('env', 'HOME') }}/.gitignore"
+      regexp: '^.dotfiles'
+      line: .dotfiles
+      state: present
+      create: yes
+
+  - name: "Reload bash and Configure dotgit repository"
+    command: "{{ dotgit_cmd }} config --local status.showUntrackedFiles no"
+
+  - name: "Backup conflicting files"
+    shell: >
+      cd {{ lookup('env', 'HOME') }} &&
+      mkdir -p .config-backup &&
+      {{ dotgit_cmd }} checkout 2>&1 | egrep "\s+\." | awk {'print $1'} |
+      xargs -I{} mv {} .config-backup/{} &&
+      {{ dotgit_cmd }} checkout
