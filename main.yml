@@ -11,6 +11,7 @@
     opt_path: "{{ lookup('env', 'HOME') }}/opt"
     keepassxc_org: "keepassxreboot"
     keepassxc_repo: "keepassxc"
+    discord_link: "https://discord.com/api/download?platform=linux&format=deb"
 
   pre_tasks:
   - name: "Update Cache"
@@ -51,6 +52,7 @@
       - libreoffice
       - texlive
       - thunderbird
+      - redshift
       state: latest
 
   - name: "Set dotgit Command Alias"
@@ -246,3 +248,14 @@
     apt:
       pkg: spotify-client
       state: present
+
+  - name: "Download Discord Package"
+    get_url:
+      url: "{{ discord_link }}"
+      dest: "{{ lookup('env', 'HOME') }}/Downloads/discord.deb"
+      mode: '0700'
+
+  - name: "Install Discord Package"
+    become: yes
+    apt:
+      deb: "{{ lookup('env', 'HOME') }}/Downloads/discord.deb"

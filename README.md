@@ -33,7 +33,7 @@ ansible-playbook main.yml -K
     - how to manage ssh keys?
     - setup .ssh/config
 - Install programs:
-    - discord
+    - ...
 - Python setup:
     - pyenv
     - pipx
