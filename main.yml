@@ -186,3 +186,24 @@
       src: "{{ opt_path }}/keepassxc"
       dest: "{{ lookup('env', 'HOME') }}/.local/bin/keepassxc"
       state: link
+
+  - name: "Add Google Chrome Repository Key"
+    become: yes
+    apt_key:
+      url: "https://dl.google.com/linux/linux_signing_key.pub"
+      state: present
+
+  - name: "Add Google Chrome Repository"
+    become: yes
+    apt_repository:
+      repo: "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main"
+      state: present
+      filename: google-chrome
+      update_cache: yes
+
+  - name: "Install Google Chrome"
+    become: yes
+    apt:
+      pkg: google-chrome-stable
+      state: present
+
