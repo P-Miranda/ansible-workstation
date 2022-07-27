@@ -9,6 +9,8 @@
     dotgit_cmd: "/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
     program_src_path: "{{ lookup('env', 'HOME') }}/program_sources"
     opt_path: "{{ lookup('env', 'HOME') }}/opt"
+    keepassxc_org: "keepassxreboot"
+    keepassxc_repo: "keepassxc"
 
   pre_tasks:
   - name: "Update Cache"
@@ -125,39 +127,62 @@
       state: directory
       mode: '0700'
 
-  - name: "Clone Neovim Repository"
-    git:
-      dest: "{{ program_src_path }}/neovim"
-      repo: "git@github.com:neovim/neovim.git"
-      update: yes
-      recursive: yes
-      version: nightly
+  # - name: "Clone Neovim Repository"
+  #   git:
+  #     dest: "{{ program_src_path }}/neovim"
+  #     repo: "git@github.com:neovim/neovim.git"
+  #     update: yes
+  #     recursive: yes
+  #     version: nightly
+  #
+  # - name: "Compile Neovim from Source"
+  #   make:
+  #     chdir: "{{ program_src_path }}/neovim"
+  #     params:
+  #       CMAKE_BUILD_TYPE: Release
+  #       CMAKE_INSTALL_PREFIX: "{{ opt_path }}/neovim"
+  #
+  # - name: "Install Neovim"
+  #   make:
+  #     chdir: "{{ program_src_path }}/neovim"
+  #     target: install
+  #
+  # - name: "Add to Path"
+  #   lineinfile:
+  #     path: "{{ lookup('env', 'HOME') }}/.bash_local"
+  #     regexp: '^PATH=$HOME/opt/neovim/bin'
+  #     line: 'PATH=$HOME/opt/neovim/bin:$PATH'
+  #     state: present
+  #     create: yes
+  #
+  # - name: "Install Plugin Dependencies"
+  #   apt:
+  #   become: yes
+  #   apt:
+  #     pkg:
+  #     - xsel
+  #     - ripgrep
+  #     state: latest
 
-  - name: "Compile Neovim from Source"
-    make:
-      chdir: "{{ program_src_path }}/neovim"
-      params:
-        CMAKE_BUILD_TYPE: Release
-        CMAKE_INSTALL_PREFIX: "{{ opt_path }}/neovim"
+  - name: "Get KeePassXC AppImage Download Link"
+    shell: "./scripts/latest_appimage_url.sh {{ keepassxc_org }} {{keepassxc_repo }}"
+    register: latest_appimage_url
 
-  - name: "Install Neovim"
-    make:
-      chdir: "{{ program_src_path }}/neovim"
-      target: install
+  - set_fact:
+      keepassxc_link={{ latest_appimage_url.stdout }}
 
-  - name: "Add to Path"
-    lineinfile:
-      path: "{{ lookup('env', 'HOME') }}/.bash_local"
-      regexp: '^PATH=$HOME/opt/neovim/bin'
-      line: 'PATH=$HOME/opt/neovim/bin:$PATH'
-      state: present
-      create: yes
+  - name: "Debug keepassxc link"
+    debug:
+      msg: "{{ keepassxc_link }}"
 
-  - name: "Install Plugin Dependencies"
-    apt:
-    become: yes
-    apt:
-      pkg:
-      - xsel
-      - ripgrep
-      state: latest
+  - name: "Download KeePassXC AppImage"
+    get_url:
+      url: "{{ keepassxc_link }}"
+      dest: "{{ opt_path }}/keepassxc"
+      mode: '0500'
+
+  - name: "Add to .local/bin"
+    file:
+      src: "{{ opt_path }}/keepassxc"
+      dest: "{{ lookup('env', 'HOME') }}/.local/bin/keepassxc"
+      state: link

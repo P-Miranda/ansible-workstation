@@ -16,6 +16,7 @@ github_api="https://api.github.com/repos/$organization/$repository/releases/late
 download_link=$(curl -s $github_api \
     | grep "browser_download_url" \
     | grep "AppImage\"\$" \
-    | awk {'print $2'})
+    | awk {'print $2'} \
+    | sed 's/"//g')
 
 echo $download_link
