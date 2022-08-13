@@ -99,6 +99,12 @@
     args:
       creates: "{{ lookup('env', 'HOME') }}/.vim/bundle/vim-fugitive"
 
+  - name: "Setup local bash configurations"
+    template:
+      src: templates/.bash_local.j2
+      dest: "{{ lookup('env', 'HOME') }}/.bash_local"
+      mode: '0644'
+
   - name: "Install Neovim Dependencies"
     become: yes
     apt:
@@ -129,42 +135,42 @@
       state: directory
       mode: '0700'
 
-  # - name: "Clone Neovim Repository"
-  #   git:
-  #     dest: "{{ program_src_path }}/neovim"
-  #     repo: "git@github.com:neovim/neovim.git"
-  #     update: yes
-  #     recursive: yes
-  #     version: nightly
-  #
-  # - name: "Compile Neovim from Source"
-  #   make:
-  #     chdir: "{{ program_src_path }}/neovim"
-  #     params:
-  #       CMAKE_BUILD_TYPE: Release
-  #       CMAKE_INSTALL_PREFIX: "{{ opt_path }}/neovim"
-  #
-  # - name: "Install Neovim"
-  #   make:
-  #     chdir: "{{ program_src_path }}/neovim"
-  #     target: install
-  #
-  # - name: "Add to Path"
-  #   lineinfile:
-  #     path: "{{ lookup('env', 'HOME') }}/.bash_local"
-  #     regexp: '^PATH=$HOME/opt/neovim/bin'
-  #     line: 'PATH=$HOME/opt/neovim/bin:$PATH'
-  #     state: present
-  #     create: yes
-  #
-  # - name: "Install Plugin Dependencies"
-  #   apt:
-  #   become: yes
-  #   apt:
-  #     pkg:
-  #     - xsel
-  #     - ripgrep
-  #     state: latest
+  - name: "Clone Neovim Repository"
+    git:
+      dest: "{{ program_src_path }}/neovim"
+      repo: "git@github.com:neovim/neovim.git"
+      update: yes
+      recursive: yes
+      version: nightly
+
+  - name: "Compile Neovim from Source"
+    make:
+      chdir: "{{ program_src_path }}/neovim"
+      params:
+        CMAKE_BUILD_TYPE: Release
+        CMAKE_INSTALL_PREFIX: "{{ opt_path }}/neovim"
+
+  - name: "Install Neovim"
+    make:
+      chdir: "{{ program_src_path }}/neovim"
+      target: install
+
+  - name: "Add to Path"
+    lineinfile:
+      path: "{{ lookup('env', 'HOME') }}/.bash_local"
+      insertafter: '^export PATH'
+      line: 'export PATH=$HOME/opt/neovim/bin:$PATH'
+      state: present
+      create: yes
+
+  - name: "Install Plugin Dependencies"
+    apt:
+    become: yes
+    apt:
+      pkg:
+      - xsel
+      - ripgrep
+      state: latest
 
   - name: "Get KeePassXC AppImage Download Link"
     shell: "./scripts/latest_appimage_url.sh {{ keepassxc_org }} {{keepassxc_repo }}"
