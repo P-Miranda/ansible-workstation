@@ -1,0 +1,23 @@
+---
+- name: "Get KeePassXC AppImage Download Link"
+  shell: "./scripts/latest_appimage_url.sh {{ keepassxc_org }} {{keepassxc_repo }}"
+  register: latest_appimage_url
+
+- set_fact:
+    keepassxc_link={{ latest_appimage_url.stdout }}
+
+- name: "Debug keepassxc link"
+  debug:
+    msg: "{{ keepassxc_link }}"
+
+- name: "Download KeePassXC AppImage"
+  get_url:
+    url: "{{ keepassxc_link }}"
+    dest: "{{ opt_path }}/keepassxc"
+    mode: '0500'
+
+- name: "Add to .local/bin"
+  file:
+    src: "{{ opt_path }}/keepassxc"
+    dest: "{{ lookup('env', 'HOME') }}/.local/bin/keepassxc"
+    state: link

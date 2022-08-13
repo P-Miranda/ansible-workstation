@@ -1,0 +1,48 @@
+---
+- name: "Install NAS Dependencies"
+  apt:
+  become: yes
+  apt:
+    pkg:
+    - cifs-utils
+    state: latest
+
+- name: "NAS Credentials"
+  template:
+    src: templates/.nas_credentials.j2
+    dest: "{{ lookup('env', 'HOME') }}/.nas_credentials"
+
+- name: "Create NAS_Home Folder"
+  become: yes
+  file:
+    path: "/media/NAS_Home"
+    state: directory
+    mode: '0700'
+    group: "{{ lookup('env', 'USER') }}"
+    owner: "{{ lookup('env', 'USER') }}"
+
+- name: "Create NAS_Public Folder"
+  become: yes
+  file:
+    path: "/media/NAS_Public"
+    state: directory
+    mode: '0700'
+    group: "{{ lookup('env', 'USER') }}"
+    owner: "{{ lookup('env', 'USER') }}"
+
+- name: "Add network storage to fstab"
+  become: yes
+  blockinfile:
+    path: /etc/fstab
+    marker: "# {mark} share network"
+    block: |
+      # Home folder
+      //{{ nas_ip }}/home /media/NAS_Home cifs credentials={{ lookup('env', 'HOME') }}/.nas_credentials,iocharset=utf8,uid=1000,gid=1000 0 0
+      # Public folder
+      //{{ nas_ip }}/Public /media/NAS_Public cifs credentials={{ lookup('env', 'HOME') }}/.nas_credentials,iocharset=utf8,uid=1000,gid=1000 0 0
+
+- name: "Mount network storage"
+  become: yes
+  command: mount -a
+  args:
+    creates: "/media/NAS_Home/@Recycle"

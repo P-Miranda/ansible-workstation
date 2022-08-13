@@ -1,0 +1,34 @@
+---
+- name: "Update all packages"
+  become: yes
+  apt:
+    name: "*"
+    state: latest
+
+- name: "Install Desktop Components"
+  become: yes
+  apt:
+    pkg:
+    - xfce4
+    - xfce4-goodies
+    - i3
+    - lightdm
+    state: latest
+
+- name: "Install Packages"
+  become: yes
+  apt:
+    pkg:
+    - htop
+    - git
+    - tmux
+    - vim
+    - lxappearance
+    - build-essential
+    - arandr
+    - bear
+    - libreoffice
+    - texlive
+    - thunderbird
+    - redshift
+    state: latest

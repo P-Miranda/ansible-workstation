@@ -1,0 +1,67 @@
+---
+- name: "Install Neovim Dependencies"
+  become: yes
+  apt:
+    pkg:
+    - ninja-build
+    - gettext
+    - libtool
+    - libtool-bin
+    - autoconf
+    - automake
+    - cmake
+    - g++
+    - pkg-config
+    - unzip
+    - curl
+    - doxygen
+    state: latest
+
+- name: "Create Program Source Folder"
+  file:
+    path: "{{ program_src_path }}"
+    state: directory
+    mode: '0700'
+
+- name: "Create Opt Folder"
+  file:
+    path: "{{ opt_path }}"
+    state: directory
+    mode: '0700'
+
+- name: "Clone Neovim Repository"
+  git:
+    dest: "{{ program_src_path }}/neovim"
+    repo: "git@github.com:neovim/neovim.git"
+    update: yes
+    recursive: yes
+    version: nightly
+
+- name: "Compile Neovim from Source"
+  make:
+    chdir: "{{ program_src_path }}/neovim"
+    params:
+      CMAKE_BUILD_TYPE: Release
+      CMAKE_INSTALL_PREFIX: "{{ opt_path }}/neovim"
+
+- name: "Install Neovim"
+  make:
+    chdir: "{{ program_src_path }}/neovim"
+    target: install
+
+- name: "Add to Path"
+  lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.bash_local"
+    insertafter: '^export PATH'
+    line: 'export PATH=$HOME/opt/neovim/bin:$PATH'
+    state: present
+    create: yes
+
+- name: "Install Plugin Dependencies"
+  apt:
+  become: yes
+  apt:
+    pkg:
+    - xsel
+    - ripgrep
+    state: latest

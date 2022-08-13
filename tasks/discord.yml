@@ -1,0 +1,11 @@
+---
+- name: "Download Discord Package"
+  get_url:
+    url: "{{ discord_link }}"
+    dest: "{{ lookup('env', 'HOME') }}/Downloads/discord.deb"
+    mode: '0700'
+
+- name: "Install Discord Package"
+  become: yes
+  apt:
+    deb: "{{ lookup('env', 'HOME') }}/Downloads/discord.deb"

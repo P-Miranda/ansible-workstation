@@ -1,0 +1,50 @@
+---
+- name: "Set dotgit Command Alias"
+  lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.bashrc"
+    regexp: '^alias dotgit='
+    line: alias dotgit='{{ dotgit_cmd }}'
+    state: present
+
+# NOTE: assumes existing ssh key added to github account
+- name: "Clone Dotfiles"
+  git:
+    bare: yes
+    dest: "{{ dotfiles_dst }}"
+    repo: "{{ dotfiles_repo }}"
+    update: yes
+    recursive: yes
+
+- name: "Ignore .dotfiles folder"
+  lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.gitignore"
+    regexp: '^.dotfiles'
+    line: .dotfiles
+    state: present
+    create: yes
+
+- name: "Configure dotgit repository"
+  command: "{{ dotgit_cmd }} config --local status.showUntrackedFiles no"
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.config-backup"
+
+- name: "Backup conflicting files"
+  shell: >
+    cd {{ lookup('env', 'HOME') }} &&
+    mkdir -p .config-backup &&
+    {{ dotgit_cmd }} checkout 2>&1 | egrep "\s+\." | awk {'print $1'} |
+    xargs -I{} mv {} .config-backup/{} &&
+    {{ dotgit_cmd }} checkout
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.config-backup"
+
+- name: "Setup Vim"
+  command: vim +PluginInstall +qall
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.vim/bundle/vim-fugitive"
+
+- name: "Setup local bash configurations"
+  template:
+    src: templates/.bash_local.j2
+    dest: "{{ lookup('env', 'HOME') }}/.bash_local"
+    mode: '0644'

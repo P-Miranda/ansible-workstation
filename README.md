@@ -22,13 +22,24 @@ chmod +x setup-ansible.sh
 
 ## Run Playbooks
 ```
-ansible-playbook main.yml -K
+ansible-playbook main.yml -K --ask-vault-pass
 ```
 - `main.yml` playbook to run
 - `-K` ask for become sudo password
+- `--ask-vault-pass` ask vault password
+
+## Vault/Encrypted Values
+- Create ansible vault:
+```
+ansible-vault create [file]
+```
+- Edit the ansible vault:
+```
+ansible-vault edit [file]
+```
+- To run playboot add the flag: `--ask-vault-pass`
 
 ## TODO
-- Add bash_local template
 - Setup ssh?
     - how to manage ssh keys?
     - setup .ssh/config
@@ -47,4 +58,3 @@ ansible-playbook main.yml -K
     - riscv toolchain
     - icarus
     - verilator
-- NAS Setup

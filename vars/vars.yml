@@ -1,0 +1,9 @@
+---
+dotfiles_dst: "{{ lookup('env', 'HOME') }}/.dotfiles"
+dotfiles_repo: "git@github.com:P-Miranda/dotfiles.git"
+dotgit_cmd: "/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+program_src_path: "{{ lookup('env', 'HOME') }}/program_sources"
+opt_path: "{{ lookup('env', 'HOME') }}/opt"
+keepassxc_org: "keepassxreboot"
+keepassxc_repo: "keepassxc"
+discord_link: "https://discord.com/api/download?platform=linux&format=deb"
