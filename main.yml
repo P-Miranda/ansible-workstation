@@ -9,7 +9,7 @@
 
   # vars_prompt:
   #   - name: nas_pw
-  #     prompt: "Insert NAS user {{ nas_user }} password:"
+  #     prompt: "Insert NAS user {{ nas_user }} password"
 
   pre_tasks:
   - name: "Update Cache"
@@ -29,3 +29,4 @@
   - include: ./tasks/spotify.yml
   - include: ./tasks/discord.yml
   # - include: ./tasks/nas.yml
+  - include: ./tasks/python.yml

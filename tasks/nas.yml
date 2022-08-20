@@ -46,3 +46,9 @@
   command: mount -a
   args:
     creates: "/media/NAS_Home/@Recycle"
+
+- name: "Link mdnotes to home"
+  file:
+    src: /media/NAS_Home/mdnotes
+    dest: "{{ lookup('env', 'HOME') }}/mdnotes"
+    state: link

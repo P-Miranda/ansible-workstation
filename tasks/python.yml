@@ -1,0 +1,72 @@
+---
+- name: "Install Python Build Dependencies"
+  become: yes
+  apt:
+    pkg:
+    - make
+    - build-essential
+    - libssl-dev
+    - zlib1g-dev
+    - libbz2-dev
+    - libreadline-dev
+    - libsqlite3-dev
+    - wget
+    - curl
+    - llvm
+    - libncursesw5-dev
+    - xz-utils
+    - tk-dev
+    - libxml2-dev
+    - libxmlsec1-dev
+    - libffi-dev
+    - liblzma-dev
+    state: latest
+
+- name: "Clone Pyenv Repository"
+  git:
+    dest: "{{ pyenv_root }}"
+    repo: "{{ pyenv_repo }}"
+    update: yes
+    recursive: yes
+
+- name: "Compile Bash Extention"
+  command: "src/configure && make -C src"
+  args:
+    chdir: "{{ pyenv_root }}"
+    creates: "{{ pyenv_root }}/shims"
+
+- name: "Install Global Python Version"
+  command: "{{ pyenv_root }}/bin/pyenv install {{ pyenv_version }}"
+  args:
+    creates: "{{ pyenv_root }}/shims/{{ pyenv_shim }}"
+
+- name: "Set Global Python Version for User"
+  command: "{{ pyenv_root }}/bin/pyenv global {{ pyenv_version }}"
+
+- name: "Install Pipx"
+  command: "python3 -m pip install --user pipx"
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.local/bin/pipx"
+
+# - name: "Ensure Installed"
+#   command: "python3 -m pipx ensurepath"
+
+- name: "Install flake8"
+  command: "pipx install flake8"
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.local/bin/flake8"
+
+- name: "Install black"
+  command: "pipx install black"
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.local/bin/black"
+
+- name: "Install mypy"
+  command: "pipx install mypy"
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.local/bin/mypy"
+
+- name: "Install tox"
+  command: "pipx install tox"
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.local/bin/tox"
