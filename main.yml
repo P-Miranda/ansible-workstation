@@ -4,12 +4,12 @@
   connection: local
   
   vars_files:
-    # - ./vars/vault_vars.yml
+    - ./vars/vault_vars.yml
     - ./vars/vars.yml
 
-  # vars_prompt:
-  #   - name: nas_pw
-  #     prompt: "Insert NAS user {{ nas_user }} password"
+  vars_prompt:
+    - name: nas_pw
+      prompt: "Insert NAS user {{ nas_user }} password"
 
   pre_tasks:
   - name: "Update Cache"
@@ -20,17 +20,17 @@
 
   tasks:
 
-  # - include: ./tasks/packages.yml
-  # - include: ./tasks/dotfiles.yml
-  # - include: ./tasks/neovim.yml
-  # - include: ./tasks/keepassxc.yml
-  # - include: ./tasks/chrome.yml
-  # - include: ./tasks/brave.yml
-  # - include: ./tasks/spotify.yml
-  # - include: ./tasks/discord.yml
-  # - include: ./tasks/nas.yml
-  # - include: ./tasks/python.yml
-  # - include: ./tasks/llvm.yml
-  # - include: ./tasks/icarus.yml
-  # - include: ./tasks/verilator.yml
+  - include: ./tasks/packages.yml
+  - include: ./tasks/dotfiles.yml
+  - include: ./tasks/neovim.yml
+  - include: ./tasks/keepassxc.yml
+  - include: ./tasks/chrome.yml
+  - include: ./tasks/brave.yml
+  - include: ./tasks/spotify.yml
+  - include: ./tasks/discord.yml
+  - include: ./tasks/nas.yml
+  - include: ./tasks/python.yml
+  - include: ./tasks/llvm.yml
+  - include: ./tasks/icarus.yml
+  - include: ./tasks/verilator.yml
   - include: ./tasks/riscv.yml

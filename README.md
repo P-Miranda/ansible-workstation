@@ -38,12 +38,3 @@ ansible-vault create [file]
 ansible-vault edit [file]
 ```
 - To run playboot add the flag: `--ask-vault-pass`
-
-## TODO
-- Setup ssh?
-    - how to manage ssh keys?
-    - setup .ssh/config
-- Install programs:
-    - ...
-- Hardware setup
-    - riscv toolchain
