@@ -31,4 +31,5 @@
   # - include: ./tasks/nas.yml
   # - include: ./tasks/python.yml
   # - include: ./tasks/llvm.yml
-  - include: ./tasks/icarus.yml
+  # - include: ./tasks/icarus.yml
+  - include: ./tasks/verilator.yml

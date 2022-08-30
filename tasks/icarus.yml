@@ -1,5 +1,5 @@
 ---
-- name: "Install LLVM Install Script Dependencies"
+- name: "Install Icarus Dependencies"
   become: yes
   apt:
     pkg:

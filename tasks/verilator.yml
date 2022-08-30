@@ -1,0 +1,60 @@
+---
+- name: "Install Verilator Dependencies"
+  become: yes
+  apt:
+    pkg:
+    - git
+    - perl
+    - python3
+    - make
+    - g++
+    - libfl2
+    - libfl-dev
+    - zlib1g
+    - zlib1g-dev
+    - ccache
+    - perl-doc
+    - autoconf
+    - flex
+    - bison
+    state: latest
+
+- name: "Clone Git Repository"
+  git:
+    dest: "{{ verilator_src }}"
+    repo: "{{ verilator_repo }}"
+    update: yes
+    version: "v4.224"
+
+- name: "Generate Configure File"
+  command: "autoconf"
+  args:
+    chdir: "{{ verilator_src }}"
+    creates: "{{ verilator_src }}/configure"
+
+- name: "Configure Verilator"
+  command: "./configure --prefix {{ opt_path }}/verilator"
+  args:
+    chdir: "{{ verilator_src }}"
+    creates: "{{ verilator_src }}/Makefile"
+
+- name: "Compile Verilator"
+  command: "make -j 4"
+  args:
+    chdir: "{{ verilator_src }}"
+    creates: "{{ verilator_src }}/bin/verilator_bin"
+
+- name: "Install Verilator"
+  command: "make install"
+  args:
+    chdir: "{{ verilator_src }}"
+    creates: "{{ opt_path }}/verilator/bin/verilog"
+
+- name: "Add to Path"
+  lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.bash_local"
+    insertafter: '^export PATH'
+    line: 'export PATH=$HOME/opt/verilator/bin:$PATH'
+    state: present
+    create: yes
+
