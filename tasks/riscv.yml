@@ -1,0 +1,52 @@
+---
+- name: "Install RISCV Toolchain Dependencies"
+  become: yes
+  apt:
+    pkg:
+    - autoconf
+    - automake
+    - autotools-dev
+    - curl
+    - python3
+    - python2
+    - libmpc-dev
+    - libmpfr-dev
+    - libgmp-dev
+    - gawk
+    - build-essential
+    - bison
+    - flex
+    - texinfo
+    - gperf
+    - libtool
+    - patchutils
+    - bc
+    - zlib1g-dev
+    - libexpat-dev
+    state: latest
+
+- name: "Clone Git Repository"
+  git:
+    dest: "{{ riscv_src }}"
+    repo: "{{ riscv_repo }}"
+    update: yes
+    version: "2022.08.26"
+
+- name: "Configure RISCV Toolchain"
+  command: "./configure --prefix {{ opt_path }}/riscv --enable-multilib"
+  args:
+    chdir: "{{ riscv_src }}"
+    creates: "{{ riscv_src }}/Makefile"
+
+- name: "Compile RISCV Toolchain"
+  command: "make -j 4"
+  args:
+    chdir: "{{ riscv_src }}"
+
+- name: "Add to Path"
+  lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.bash_local"
+    insertafter: '^export PATH'
+    line: 'export PATH=$HOME/opt/riscv/bin:$PATH'
+    state: present
+    create: yes

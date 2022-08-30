@@ -17,4 +17,5 @@ icarus_src: "{{ program_src_path }}/iverilog"
 icarus_repo: "git@github.com:steveicarus/iverilog.git"
 verilator_src: "{{ program_src_path }}/verilator"
 verilator_repo: "git@github.com:verilator/verilator.git"
-
+riscv_src: "{{ program_src_path }}/riscv"
+riscv_repo: "git@github.com:riscv-collab/riscv-gnu-toolchain.git"

@@ -47,4 +47,3 @@ ansible-vault edit [file]
     - ...
 - Hardware setup
     - riscv toolchain
-    - verilator

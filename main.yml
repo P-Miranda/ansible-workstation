@@ -32,4 +32,5 @@
   # - include: ./tasks/python.yml
   # - include: ./tasks/llvm.yml
   # - include: ./tasks/icarus.yml
-  - include: ./tasks/verilator.yml
+  # - include: ./tasks/verilator.yml
+  - include: ./tasks/riscv.yml
