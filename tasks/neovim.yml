@@ -32,7 +32,7 @@
 - name: "Clone Neovim Repository"
   git:
     dest: "{{ program_src_path }}/neovim"
-    repo: "git@github.com:neovim/neovim.git"
+    repo: "https://github.com/neovim/neovim.git"
     update: yes
     recursive: yes
     version: nightly
