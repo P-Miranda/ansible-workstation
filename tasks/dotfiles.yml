@@ -38,6 +38,11 @@
   args:
     creates: "{{ lookup('env', 'HOME') }}/.config-backup"
 
+- name: "Update dotfile Submodules"
+  command: "{{ dotgit_cmd }} submodule update --init --recursive"
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.config-backup"
+
 - name: "Setup Vim"
   command: vim +PluginInstall +qall
   args:
@@ -48,3 +53,9 @@
     src: templates/.bash_local.j2
     dest: "{{ lookup('env', 'HOME') }}/.bash_local"
     mode: '0644'
+
+- name: "Create Download Folder"
+  file:
+    path: "{{ lookup('env', 'HOME' }}/Downloads"
+    state: directory
+    mode: '0700'

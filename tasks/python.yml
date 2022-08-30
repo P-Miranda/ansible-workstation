@@ -52,21 +52,21 @@
 #   command: "python3 -m pipx ensurepath"
 
 - name: "Install flake8"
-  command: "pipx install flake8"
+  command: "{{ lookup('env', 'HOME') }}/.local/bin/pipx install flake8"
   args:
     creates: "{{ lookup('env', 'HOME') }}/.local/bin/flake8"
 
 - name: "Install black"
-  command: "pipx install black"
+  command: "{{ lookup('env', 'HOME') }}/.local/bin/pipx install black"
   args:
     creates: "{{ lookup('env', 'HOME') }}/.local/bin/black"
 
 - name: "Install mypy"
-  command: "pipx install mypy"
+  command: "{{ lookup('env', 'HOME') }}/.local/bin/pipx install mypy"
   args:
     creates: "{{ lookup('env', 'HOME') }}/.local/bin/mypy"
 
 - name: "Install tox"
-  command: "pipx install tox"
+  command: "{{ lookup('env', 'HOME') }}/.local/bin/pipx install tox"
   args:
     creates: "{{ lookup('env', 'HOME') }}/.local/bin/tox"
