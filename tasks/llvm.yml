@@ -1,0 +1,22 @@
+---
+- name: "Install LLVM Install Script Dependencies"
+  become: yes
+  apt:
+    pkg:
+    - lsb-release
+    - wget
+    - software-properties-common
+    - gpg
+    state: latest
+
+- name: "Download LLVM Install Script"
+  get_url:
+    url: "{{ llvm_script_link }}"
+    dest: "{{ llvm_script_dir }}/llvm.sh"
+    mode: '0700'
+
+- name: "Install all LLVM Packages from specific version"
+  become: yes
+  command: "sudo ./llvm.sh all"
+  args:
+    chdir: "{{ llvm_script_dir }}"

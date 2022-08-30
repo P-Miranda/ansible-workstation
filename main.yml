@@ -20,13 +20,14 @@
 
   tasks:
 
-  - include: ./tasks/packages.yml
-  - include: ./tasks/dotfiles.yml
-  - include: ./tasks/neovim.yml
-  - include: ./tasks/keepassxc.yml
-  - include: ./tasks/chrome.yml
-  - include: ./tasks/brave.yml
-  - include: ./tasks/spotify.yml
-  - include: ./tasks/discord.yml
+  # - include: ./tasks/packages.yml
+  # - include: ./tasks/dotfiles.yml
+  # - include: ./tasks/neovim.yml
+  # - include: ./tasks/keepassxc.yml
+  # - include: ./tasks/chrome.yml
+  # - include: ./tasks/brave.yml
+  # - include: ./tasks/spotify.yml
+  # - include: ./tasks/discord.yml
   # - include: ./tasks/nas.yml
-  - include: ./tasks/python.yml
+  # - include: ./tasks/python.yml
+  - include: ./tasks/llvm.yml
