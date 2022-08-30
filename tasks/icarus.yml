@@ -1,0 +1,53 @@
+---
+- name: "Install LLVM Install Script Dependencies"
+  become: yes
+  apt:
+    pkg:
+    - make
+    - bison
+    - flex
+    - gperf
+    - libreadline-dev
+    - libncurses-dev
+    - autoconf
+    state: latest
+
+- name: "Clone Git Repository"
+  git:
+    dest: "{{ icarus_src }}"
+    repo: "{{ icarus_repo }}"
+    update: yes
+    version: "v11_0"
+
+- name: "Generate Configure File"
+  command: "sh autoconf.sh --prefix={{ opt_path }}/iverilog"
+  args:
+    chdir: "{{ icarus_src }}"
+    creates: "{{ icarus_src }}/configure"
+
+- name: "Configure Icarus"
+  command: "./configure --prefix={{ opt_path }}/iverilog"
+  args:
+    chdir: "{{ icarus_src }}"
+    creates: "{{ icarus_src }}/Makefile"
+
+- name: "Compile Icarus"
+  command: "make"
+  args:
+    chdir: "{{ icarus_src }}"
+    creates: "{{ icarus_src }}/driver/iverilog"
+
+- name: "Install Icarus"
+  command: "make install"
+  args:
+    chdir: "{{ icarus_src }}"
+    creates: "{{ opt_path }}/iverilog/bin/iverilog"
+
+- name: "Add to Path"
+  lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.bash_local"
+    insertafter: '^export PATH'
+    line: 'export PATH=$HOME/opt/iverilog/bin:$PATH'
+    state: present
+    create: yes
+

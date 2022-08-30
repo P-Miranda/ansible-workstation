@@ -45,9 +45,6 @@ ansible-vault edit [file]
     - setup .ssh/config
 - Install programs:
     - ...
-- C/C++ setup
-    - install clang and other tools
 - Hardware setup
     - riscv toolchain
-    - icarus
     - verilator
