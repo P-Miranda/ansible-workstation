@@ -50,4 +50,3 @@
     line: 'export PATH=$HOME/opt/iverilog/bin:$PATH'
     state: present
     create: yes
-

@@ -1,0 +1,31 @@
+---
+- name: "Download Firefox Build"
+  get_url:
+    url: "{{ firefox_link }}"
+    dest: "{{ lookup('env','HOME') }}/Downloads"
+    mode: '0700'
+
+- name: "Find Firefox tar"
+  find:
+    paths: "{{ lookup('env','HOME') }}/Downloads"
+    patterns: "firefox*.tar.bz2"
+  register: firefox_tar
+
+- name: "Extract Firefox"
+  unarchive:
+    src: "{{ firefox_tar.files[0]['path'] }}"
+    dest: "{{ opt_path }}"
+
+- name: "Install Google Chrome"
+  become: yes
+  apt:
+    pkg: google-chrome-stable
+    state: present
+
+- name: "Add to Path"
+  lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.bash_local"
+    insertafter: '^export PATH'
+    line: 'export PATH=$HOME/opt/firefox:$PATH'
+    state: present
+    create: yes

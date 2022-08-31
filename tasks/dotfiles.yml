@@ -56,6 +56,6 @@
 
 - name: "Create Download Folder"
   file:
-    path: "{{ lookup('env', 'HOME' }}/Downloads"
+    path: "{{ lookup('env', 'HOME') }}/Downloads"
     state: directory
     mode: '0700'

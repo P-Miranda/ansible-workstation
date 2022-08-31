@@ -29,7 +29,6 @@
   git:
     dest: "{{ riscv_src }}"
     repo: "{{ riscv_repo }}"
-    update: yes
     version: "2022.08.26"
 
 - name: "Configure RISCV Toolchain"

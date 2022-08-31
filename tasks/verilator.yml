@@ -57,4 +57,3 @@
     line: 'export PATH=$HOME/opt/verilator/bin:$PATH'
     state: present
     create: yes
-

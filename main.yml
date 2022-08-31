@@ -24,6 +24,7 @@
   - include: ./tasks/dotfiles.yml
   - include: ./tasks/neovim.yml
   - include: ./tasks/keepassxc.yml
+  - include: ./tasks/firefox.yml
   - include: ./tasks/chrome.yml
   - include: ./tasks/brave.yml
   - include: ./tasks/spotify.yml
