@@ -1,0 +1,12 @@
+---
+- name: "Download RClone Install Script"
+  get_url:
+    url: "{{ rclone_link }}"
+    dest: "{{ lookup('env','HOME') }}/Downloads"
+    mode: '0700'
+
+- name: "Run Install Script"
+  become: yes
+  command: "sudo ./install.sh"
+  args:
+    chdir: "{{ lookup('env','HOME') }}/Downloads"
