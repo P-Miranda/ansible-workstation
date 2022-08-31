@@ -38,3 +38,7 @@ ansible-vault create [file]
 ansible-vault edit [file]
 ```
 - To run playboot add the flag: `--ask-vault-pass`
+
+# TODO
+- veracrypt
+- check NAS mount
