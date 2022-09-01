@@ -37,9 +37,9 @@
     marker: "# {mark} share network"
     block: |
       # Home folder
-      //{{ nas_ip }}/home /media/NAS_Home cifs credentials={{ lookup('env', 'HOME') }}/.nas_credentials,iocharset=utf8,uid=1000,gid=1000 0 0
+      //{{ nas_ip }}/home /media/NAS_Home cifs credentials={{ lookup('env', 'HOME') }}/.nas_credentials,_netdev,iocharset=utf8,uid=1000,gid=1000 0 0
       # Public folder
-      //{{ nas_ip }}/Public /media/NAS_Public cifs credentials={{ lookup('env', 'HOME') }}/.nas_credentials,iocharset=utf8,uid=1000,gid=1000 0 0
+      //{{ nas_ip }}/Public /media/NAS_Public cifs credentials={{ lookup('env', 'HOME') }}/.nas_credentials,_netdev,iocharset=utf8,uid=1000,gid=1000 0 0
 
 - name: "Mount network storage"
   become: yes
