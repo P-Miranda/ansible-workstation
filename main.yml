@@ -25,6 +25,7 @@
   - include: ./tasks/neovim.yml
   - include: ./tasks/keepassxc.yml
   - include: ./tasks/rclone.yml
+  - include: ./tasks/veracrypt.yml
   - include: ./tasks/firefox.yml
   - include: ./tasks/chrome.yml
   - include: ./tasks/brave.yml

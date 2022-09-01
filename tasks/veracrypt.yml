@@ -2,21 +2,32 @@
 - name: "Download Veracrypt Deb Package"
   get_url:
     url: "{{ veracrypt_link }}"
-    dest: "{{ lookup('env','HOME') }}/Downloads"
+    dest: "{{ lookup('env','HOME') }}/Downloads/veracrypt.deb"
     mode: '0700'
 
 - name: "Download Veracrypt Deb Package Signature"
   get_url:
     url: "{{ veracrypt_sig }}"
-    dest: "{{ lookup('env','HOME') }}/Downloads"
+    dest: "{{ lookup('env','HOME') }}/Downloads/veracrypt.deb.sig"
     mode: '0700'
 
 - name: "Download Veracrypt PGP Public Key"
   get_url:
     url: "{{ veracrypt_pgp_key }}"
-    dest: "{{ lookup('env','HOME') }}/Downloads"
+    dest: "{{ lookup('env','HOME') }}/Downloads/veracrypt_PGP_pub_key.asc"
     mode: '0700'
 
-## TODO:
-# 1. validate downloaded deb package
-# 2. install deb package
+- name: "Import PGP Public Key"
+  command: "gpg --import veracrypt_PGP_pub_key.asc"
+  args:
+    chdir: "{{ lookup('env','HOME') }}/Downloads"
+
+- name: "Validate Deb Package"
+  command: "gpg --verify veracrypt.deb.sig veracrypt.deb"
+  args:
+    chdir: "{{ lookup('env','HOME') }}/Downloads"
+
+- name: "Install Veracrypt Deb Package"
+  become: yes
+  apt:
+    deb: "{{ lookup('env','HOME') }}/Downloads/veracrypt.deb"

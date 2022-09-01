@@ -16,12 +16,6 @@
     src: "{{ firefox_tar.files[0]['path'] }}"
     dest: "{{ opt_path }}"
 
-- name: "Install Google Chrome"
-  become: yes
-  apt:
-    pkg: google-chrome-stable
-    state: present
-
 - name: "Add to Path"
   lineinfile:
     path: "{{ lookup('env', 'HOME') }}/.bash_local"
